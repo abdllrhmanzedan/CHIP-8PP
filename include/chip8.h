@@ -6,11 +6,13 @@
 class Chip8
 {
 public:
+    u8 keypad[KEYPAD_SIZE];                     // hexa keypad from [0:F]
+    u8 display[DISPLAY_WIDHT * DISPLAY_HEIGHT]; // the 64 * 32 screen
+
     Chip8();
     bool loadROM(char*);                        // load program instruction into the memory
-    void clock();                               // perform one clock cycle
-    u8 keypad[KEYPAD_SIZE];                     // hexa keypad from [0:F]
-    u32 display[DISPLAY_WIDHT * DISPLAY_HEIGHT];// the 64 * 32 screen; u32 to make it easy with SDL
+    void clock(bool&, bool&);                   // perform one clock cycle
+
 private:
     // data members
     u16 pc;                                     // program counter
@@ -85,13 +87,11 @@ private:
     void op_FX55();                             // mem[i]=v0, mem[i+1]=v1...mem[i+x]=vx. I: doesn't change
     void op_FX65();                             // v0=mem[i], v1=mem[i+1]...vx=mem[i+x]. I: doesn't change
 
-    void op_NULL();                             // handling non-valid instruction
-
     // instruction groups
-    void group_0(u8);                           // handling all instructions begin with 0
-    void group_8(u8);                           // handling all instructions begin with 8
-    void group_E(u8);                           // handling all instructions begin with E
-    void group_F(u8);                           // handling all instructions begin with F
+    void group_0(u8, std::string&);                           // handling all instructions begin with 0
+    void group_8(u8, std::string&);                           // handling all instructions begin with 8
+    void group_E(u8, std::string&);                           // handling all instructions begin with E
+    void group_F(u8, std::string&);                           // handling all instructions begin with F
 };
 
 #endif

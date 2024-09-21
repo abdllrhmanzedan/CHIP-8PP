@@ -1,36 +1,86 @@
 #include <iostream>
-#include "../3rdparty/inc/SDL.h"
+#include "../include/chip8.h"
+#include "../include/defines.h"
+#include "../include/platform.h"
+#include <unistd.h> // for delay
+#include <limits>   // For std::numeric_limits
+#include <windows.h>
 
 #undef main
-const int WIDTH = 800, HEIGHT = 600;
+
+std::string games[] = {"invaders", "tetris", "pumpkin", "danm8ku", "rocket2", "ibm", "brix"};
 
 int main(int argc, char *argv[])
 {
-    SDL_Init(SDL_INIT_EVERYTHING);
+    // initlizing the chip
+    std::cout << "[PENDING] Initializing CHIP-8\n";
+    Chip8 chip8;
+    std::cout << "[OK] DONE!\n";
 
-    SDL_Window *window = SDL_CreateWindow("Hello SDL WORLD", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI);
-
-    if (NULL == window)
-    {
-        std::cout << "Could not create window: " << SDL_GetError() << std::endl;
-        return 1;
-    }
-
-    SDL_Event windowEvent;
-
+    // getting the game
+    char *file;
+    std::cout << "Pick the a game to execute, input a number [1-6]:\n";
+    std::cout << "1- Invaders\n";
+    std::cout << "2- Tetris\n";
+    std::cout << "3- Pumpkin Dressing up\n";
+    std::cout << "4- Danm8ku\n";
+    std::cout << "5- Rocket 2\n";
+    std::cout << "6- IBM LOGO\n";
+    std::cout << "7- Brix\n";
     while (true)
     {
-        if (SDL_PollEvent(&windowEvent))
+        int x;
+        std::cin >> x;
+        if (std::cin.fail() || x < 1 || x > 7)
         {
-            if (SDL_QUIT == windowEvent.type)
-            {
-                break;
-            }
+            std::cout << "Invalid input!\n";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard invalid input
+        }
+        else
+        {
+            std::string tmp = "../ROMs/" + games[x - 1] + ".ch8";
+            file = strdup(tmp.c_str());
+            break;
         }
     }
 
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+    // loading the rom
+    std::cout << "[PENDING] Loading ROM...\n";
+    if (!chip8.loadROM(file))
+    {
+        std::cerr << "[FAILED] Could't Load the ROM\n";
+        return 1;
+    }
+    std::cout << "[OK] ROM Loaded Successfully!\n";
 
-    return EXIT_SUCCESS;
+    // setting the SDL window
+    std::cout << "[PENDING] Initializing Screen\n";
+    Platform platform;
+    std::cout << "[OK] Screen Initialized Successfully\n";
+
+    // main loop
+    bool quit = false;
+    while (!quit)
+    {
+        bool draw = false;
+        bool sound = false;
+
+        chip8.clock(draw, sound);
+
+        quit = platform.inputHandler(chip8.keypad);
+        if (quit)
+            break;
+
+        if (draw)
+            platform.updateScreen(chip8.display);
+
+        if (sound)
+            Beep(1400, 160);
+
+        // Delay to emulate CHIP-8's clock speed (adjust as needed)
+        usleep(1000);
+    }
+
+    return 0;
 }
