@@ -12,10 +12,10 @@ Chip8::Chip8()
     pc = PROGRAM_START;
 
     // intilize the: V, keypad, memory, stack, display
-    memset(V, 0, sizeof(V));
-    memset(keypad, 0, sizeof(keypad));
-    memset(memory, 0, sizeof(memory));
-    memset(stack, 0, sizeof(stack));
+    memset(V      , 0, sizeof(V));
+    memset(keypad , 0, sizeof(keypad));
+    memset(memory , 0, sizeof(memory));
+    memset(stack  , 0, sizeof(stack));
     memset(display, 0, sizeof(display));
 
     // write fonts into memory
@@ -44,6 +44,7 @@ bool Chip8::loadROM(char *path)
         }
         memory[PROGRAM_START + i] = (u8)instr;
     }
+    program_file.close();
     return true;
 }
 
@@ -61,11 +62,11 @@ void Chip8::clock()
 
     // decode current instruction
     // 1234: nibbles numbered from left to right
-    u8 first_nibble = (opcode & 0xF000);
+    u8 first_nibble  = (opcode & 0xF000);
     u8 second_nibble = (opcode & 0x0F00);
-    u8 third_nibble = (opcode & 0x00F0);
+    u8 third_nibble  = (opcode & 0x00F0);
     u8 fourth_nibble = (opcode & 0x000F);
-    u8 last_two = (opcode & 0x00FF);
+    u8 last_two      = (opcode & 0x00FF);
 
     // execute the fetched instruction
     switch (first_nibble)
