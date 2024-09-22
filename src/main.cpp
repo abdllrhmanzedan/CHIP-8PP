@@ -9,6 +9,7 @@
 #undef main
 
 std::string games[] = {"invaders", "tetris", "pumpkin", "danm8ku", "rocket2", "ibm", "brix"};
+int list_size = 7;
 
 int main(int argc, char *argv[])
 {
@@ -19,14 +20,9 @@ int main(int argc, char *argv[])
 
     // getting the game
     char *file;
-    std::cout << "Pick the a game to execute, input a number [1-6]:\n";
-    std::cout << "1- Invaders\n";
-    std::cout << "2- Tetris\n";
-    std::cout << "3- Pumpkin Dressing up\n";
-    std::cout << "4- Danm8ku\n";
-    std::cout << "5- Rocket 2\n";
-    std::cout << "6- IBM LOGO\n";
-    std::cout << "7- Brix\n";
+    std::cout << "Pick the a game to execute, input a number [1-" << list_size << "]\n";
+    for (int i = 0; i < list_size; i++)
+        std::cout << (i + 1) << "- " << games[i] << "\n";
     while (true)
     {
         int x;
@@ -35,7 +31,7 @@ int main(int argc, char *argv[])
         {
             std::cout << "Invalid input!\n";
             std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard invalid input
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
         else
         {
@@ -58,7 +54,7 @@ int main(int argc, char *argv[])
     std::cout << "[PENDING] Initializing Screen\n";
     Platform platform;
     std::cout << "[OK] Screen Initialized Successfully\n";
-
+    
     // main loop
     bool quit = false;
     while (!quit)

@@ -88,10 +88,10 @@ private:
     void op_FX65();                             // v0=mem[i], v1=mem[i+1]...vx=mem[i+x]. I: doesn't change
 
     // instruction groups
-    void group_0(u8, std::string&);                           // handling all instructions begin with 0
-    void group_8(u8, std::string&);                           // handling all instructions begin with 8
-    void group_E(u8, std::string&);                           // handling all instructions begin with E
-    void group_F(u8, std::string&);                           // handling all instructions begin with F
+    void group_0(u8, std::string&);             // handling all instructions begin with 0
+    void group_8(u8, std::string&);             // handling all instructions begin with 8
+    void group_E(u8, std::string&);             // handling all instructions begin with E
+    void group_F(u8, std::string&);             // handling all instructions begin with F
 };
 
 #endif

@@ -29,7 +29,6 @@ bool Chip8::loadROM(char *path)
     std::ifstream program_file(path, std::ios::binary | std::ios::in);
     if (!program_file.is_open())
     {
-        std::cerr << "Chip8::loadROM(char*), cannot open file!";
         return false;
     }
 
@@ -158,7 +157,6 @@ void Chip8::clock(bool &draw, bool &sound)
         sound_timer--;
     }
 }
-/**********************************************************************************/
 
 void Chip8::initFonts()
 {
@@ -167,7 +165,7 @@ void Chip8::initFonts()
         memory[FONTS_START + i] = font_sprite[i];
     }
 }
-/**********************************************************************************/
+//----------------------------------------------------------------------------------
 
 // extract ?(NNN)
 u16 Chip8::address()
@@ -192,7 +190,7 @@ u8 Chip8::regy()
 {
     return (opcode & 0x00F0u) >> 4u;
 }
-/**********************************************************************************/
+//----------------------------------------------------------------------------------
 
 // left most bit
 u8 Chip8::msb(u8 reg)
@@ -317,7 +315,7 @@ void Chip8::op_8XY1()
     u8 x = regx();
     u8 y = regy();
 
-    V[0xF] = 0;
+    // V[0xF] = 0;       // Quirk
     V[x] |= V[y];
 }
 
@@ -327,7 +325,7 @@ void Chip8::op_8XY2()
     u8 x = regx();
     u8 y = regy();
 
-    V[0xF] = 0;
+    // V[0xF] = 0;       // Quirk
     V[x] &= V[y];
 }
 
@@ -337,7 +335,7 @@ void Chip8::op_8XY3()
     u8 x = regx();
     u8 y = regy();
 
-    V[0xF] = 0;
+    // V[0xF] = 0;     // Quirk
     V[x] ^= V[y];
 }
 
